@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from django.db import models
 
@@ -16,8 +16,13 @@ if TYPE_CHECKING:
 class ModelWithIdAndTimestamp(models.Model):
     """Basic Model that includes an auto incrmented id, info_timestamp, and info_modified_timestamp and some related functions"""
 
-    class Meta:  # type: ignore - Meta classes always throw type errors
-        abstract = True  # Required to be able to subclass models.Model
+    # Required to be able to subclass models.Model
+    class _Meta:
+        abstract = True
+
+    # Fixes IncompatibleVariableOverride Pylance issues with Meta class
+    # See: https://github.com/microsoft/pylance-release/issues/3814#issuecomment-1376276168
+    Meta = cast(type[models.Model.Meta], _Meta)
 
     id = models.AutoField(primary_key=True)
     """Automatically generated unique ID"""

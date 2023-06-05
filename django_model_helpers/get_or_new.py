@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from django.db import models
 
@@ -14,8 +14,12 @@ class GetOrNew(models.Model):
     """A mixin that adds a get_or_new method to a model"""
 
     # Required to be able to subclass models.Model
-    class Meta:  # type: ignore - Abstract Meta classes always throw type errors
+    class _Meta:
         abstract = True
+
+    # Fixes IncompatibleVariableOverride Pylance issues with Meta class
+    # See: https://github.com/microsoft/pylance-release/issues/3814#issuecomment-1376276168
+    Meta = cast(type[models.Model.Meta], _Meta)
 
     def get_or_new(self, **values: str | int | models.Model) -> tuple[Self, bool]:
         """Inspired by get_or_create, but with some differences
