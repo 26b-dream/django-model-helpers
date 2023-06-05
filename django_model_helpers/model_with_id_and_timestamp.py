@@ -1,3 +1,5 @@
+"""Basic Model that includes an auto incrmented id, info_timestamp, and info_modified_timestamp and some related functions"""
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -14,24 +16,38 @@ if TYPE_CHECKING:
 class ModelWithIdAndTimestamp(models.Model):
     """Basic Model that includes an auto incrmented id, info_timestamp, and info_modified_timestamp and some related functions"""
 
-    class Meta:  # type: ignore - Abstract Meta classes always throw type errors
+    class Meta:  # type: ignore - Meta classes always throw type errors
         abstract = True  # Required to be able to subclass models.Model
 
-    # Automatically genenrated ID
     id = models.AutoField(primary_key=True)
+    """Automatically generated unique ID"""
 
-    # Timestamps
     info_timestamp = models.DateTimeField()
+    """Timestamp representing when the information in the database was last pulled from an external source"""
+
     # If I modify information by hand I do not want the timestamp to auto-update
-    # Therefore this timestamp needs to be manually updated
+    # Therefore automatically updating timestamps is not appropriate and it must be updated manually
     info_modified_timestamp = models.DateTimeField()
+    """Timestamp representing when the information in the database was last modified excluding modifications that are
+    done by hand"""
 
     def is_up_to_date(
         self,
         minimum_info_timestamp: Optional[datetime] = None,
         minimum_modified_timestamp: Optional[datetime] = None,
     ) -> bool:
-        """Check if the model is up to date using minimum_info_timestamp and minimum_modified_timestamp"""
+        """Check if the information in the database is up to date
+
+        Args:
+            minimum_info_timestamp (Optional[datetime], optional): The minimum timestamp that the information on the
+            database was last pulled from an external source, if none is given just check if the entry exists. Defaults
+            to None.
+            minimum_modified_timestamp (Optional[datetime], optional): The minimum timestamp that the information on the
+            database was last modified programmatically. If none is given jsut check if the entry exists. Defaults to
+            None.
+
+        Returns:
+            bool: True if the information is up to date, False otherwise"""
 
         # If no timestamp is present the information has to be outdated
         if not self.info_timestamp or not self.info_modified_timestamp:
@@ -53,14 +69,36 @@ class ModelWithIdAndTimestamp(models.Model):
         minimum_info_timestamp: Optional[datetime] = None,
         minimum_modified_timestamp: Optional[datetime] = None,
     ) -> bool:
-        """Check if the model is outdated using minimum_info_timestamp and minimum_modified_timestamp"""
+        """Check if the information in the database is outdated
+
+        Args:
+            minimum_info_timestamp (Optional[datetime], optional): The minimum timestamp that the information on the
+            database was last pulled from an external source, if none is given just check if the entry exists. Defaults
+            to None.
+            minimum_modified_timestamp (Optional[datetime], optional): The minimum timestamp that the information on the
+            database was last modified programmatically. If none is given jsut check if the entry exists. Defaults to
+            None.
+
+        Returns:
+            bool: True if the information is outdated, False otherwise"""
+
         return not self.is_up_to_date(minimum_info_timestamp, minimum_modified_timestamp)
 
     def add_timestamps_and_save(self, info_timestamp: ExtendedPath | datetime) -> None:
+        """Add timestamps to the model and save it
+
+        Args:
+            info_timestamp (ExtendedPath | datetime): The timestamp representing when the information was last updated
+            from an external source, if an ExtendedPath is given it will be converted to a datetime object."""
         self.add_timestamps(info_timestamp)
         self.save()
 
     def add_timestamps(self, info_timestamp: ExtendedPath | datetime) -> None:
+        """Add timestamps to the model
+
+        Args:
+            info_timestamp (ExtendedPath | datetime): The timestamp representing when the information was last updated
+            from an external source, if an ExtendedPath is given it will be converted to a datetime object."""
         if isinstance(info_timestamp, ExtendedPath):
             self.info_timestamp = info_timestamp.aware_mtime()
         else:

@@ -6,14 +6,18 @@ profile = "black"
 line_length = 120
 
 [tool.pylint]
-disable = "C0301"
-# C0301 - Line too long: Black makes this redundant
+disable = [
+    "C0301", # line-too-long: Black makes this redundant
+    "E1101", # no-member: Black makes thie redundant and it sometimes has false positives
+]
 
 [tool.poetry]
 name = "django_model_helpers"
 version = "0.0.1"
-description = "Extra functions and classes for Django models"
+description = "Extra functions and classes for Django models."
 authors = ["26b_dream <1@1.1>"]
+readme = "README.md"
+license = "AGPL-3.0-only"
 
 [tool.poetry.dependencies]
 python = "^3.8"
