@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from django.db import models
+
+from .model_with_cast_meta import ModelWithCastMeta
 
 if TYPE_CHECKING:
     from typing import Optional
@@ -13,16 +15,8 @@ if TYPE_CHECKING:
     from extended_path import ExtendedPath
 
 
-class ModelWithIdAndTimestamp(models.Model):
+class ModelWithIdAndTimestamp(ModelWithCastMeta):
     """Basic Model that includes an auto incrmented id, info_timestamp, and info_modified_timestamp and some related functions"""
-
-    # Required to be able to subclass models.Model
-    class _Meta:
-        abstract = True
-
-    # Fixes IncompatibleVariableOverride Pylance issues with Meta class
-    # See: https://github.com/microsoft/pylance-release/issues/3814#issuecomment-1376276168
-    Meta = cast(type[models.Model.Meta], _Meta)
 
     id = models.AutoField(primary_key=True)
     """Automatically generated unique ID"""
