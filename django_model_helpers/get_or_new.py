@@ -6,14 +6,16 @@ from typing import TYPE_CHECKING
 
 from django.db import models
 
-from .model_with_cast_meta import ModelWithCastMeta
-
 if TYPE_CHECKING:
     from typing import Self
 
 
-class GetOrNew(ModelWithCastMeta):
+class GetOrNew(models.Model):
     """A mixin that adds a get_or_new method to a model"""
+
+    # Required to be able to subclass models.Model
+    class Meta:  # pyright: ignore [reportIncompatibleVariableOverride]
+        abstract = True
 
     def get_or_new(self, **values: str | int | models.Model) -> tuple[Self, bool]:
         """Inspired by get_or_create, but with some differences

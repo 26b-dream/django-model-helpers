@@ -7,16 +7,17 @@ from typing import TYPE_CHECKING
 
 from django.db import models
 
-from .model_with_cast_meta import ModelWithCastMeta
-
 if TYPE_CHECKING:
     from typing import Optional
 
     from extended_path import ExtendedPath
 
 
-class ModelWithIdAndTimestamp(ModelWithCastMeta):
+class ModelWithIdAndTimestamp(models.Model):
     """Basic Model that includes an auto incrmented id, info_timestamp, and info_modified_timestamp and some related functions"""
+
+    class Meta:  # pyright: ignore [reportIncompatibleVariableOverride]
+        abstract = True  # Required to be able to subclass models.Model
 
     id = models.AutoField(primary_key=True)
     """Automatically generated unique ID"""
