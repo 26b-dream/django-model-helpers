@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class GetOrNew(models.Model):
     # Required to be able to subclass models.Model
-    class Meta:  # type: ignore - Meta class always throws type errors
+    class Meta:  # type: ignore - Abstract Meta classes always throw type errors
         abstract = True
 
     def get_or_new(self, **values: str | int | models.Model) -> tuple[Self, bool]:
