@@ -1,0 +1,34 @@
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.pylint]
+disable = "C0301"
+# C0301 - Line too long: Black makes this redundant
+
+[tool.poetry]
+name = "django_model_helpers"
+version = "0.0.1"
+description = "Extra functions and classes for Django models"
+authors = ["26b_dream <1@1.1>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django = "^4.2"
+extended_path = { git = "https://github.com/26b-dream/extended-path.git" }
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+isort = "*"
+flake8 = "*"
+pytest = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
