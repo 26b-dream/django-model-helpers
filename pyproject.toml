@@ -32,6 +32,7 @@ black = "*"
 isort = "*"
 flake8 = "*"
 pytest = "*"
+pylint-django = "*"
 
 [build-system]
 requires = ["poetry-core"]
