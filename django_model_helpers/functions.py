@@ -28,6 +28,5 @@ def auto_unique(*fields: str) -> models.UniqueConstraint:
     # first caller followed by the actual model class
     if inspect.stack()[1].function != "Meta":
         raise ValueError("sketchy_lazy_namer has lived up to it's name and somethign went wrong")
-    print(f"{inspect.stack()[2].function}_{'_'.join(fields)}")
 
     return models.UniqueConstraint(fields=fields, name=f"{inspect.stack()[2].function}_{'_'.join(fields)}")
