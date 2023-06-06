@@ -6,11 +6,10 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from django.db import models
+from extended_path import ExtendedPath
 
 if TYPE_CHECKING:
     from typing import Optional
-
-    from extended_path import ExtendedPath
 
 
 class ModelWithIdAndTimestamp(models.Model):
